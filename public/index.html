@@ -11,37 +11,41 @@
 			crossorigin="anonymous"
 		/>
 		<link rel="stylesheet" href="css/style.css" />
-		<title>ChatCord App</title>
+		<title>MyChatApp</title>
 	</head>
 	<body>
-		<div class="join-container">
+		<div class="join-container" style="margin-top: 170px;">
 			<header class="join-header">
-				<h1><i class="fas fa-smile"></i> ChatCord</h1>
+				<h1>MyChatApp   <i class="fas fa-comments"></i></h1>
 			</header>
 			<main class="join-main">
 				<form action="chat.html">
 					<div class="form-control">
-						<label for="username">Username</label>
-						<input
-							type="text"
-							name="username"
-							id="username"
-							placeholder="Enter username..."
-							required
-						/>
+						<div class="form-group row">
+							<label for="username" style="width: 200px">Nick</label>
+							<input
+								type="text"
+								name="username"
+								id="username"
+								placeholder="Your nickname"
+								required
+								style="width:250px; background-color: aliceblue; margin-left: 70px"
+							/>
+						
+						</div>
 					</div>
 					<div class="form-control">
 						<label for="room">Room</label>
-						<select name="room" id="room">
-							<option value="JavaScript">JavaScript</option>
-							<option value="Python">Python</option>
-							<option value="PHP">PHP</option>
-							<option value="C#">C#</option>
-							<option value="Ruby">Ruby</option>
-							<option value="Java">Java</option>
+						<select name="room" id="room" style="width:250px;background-color: aliceblue; margin-left: 57px">
+							<option value="Informatyka Stosowana">Informatyka Stosowana</option>
+							<option value="Inzynieria Systemow">Inzynieria Systemow</option>
+							<option value="Informatyka Techniczna">Informatyka Techniczna</option>
+							<option value="Inzynieria Zarzadzania">Inzynieria Zarzadzania</option>
+							<option value="Chemia Analityczna">Chemia Analityczna</option>
+							<option value="Budownictwo">Budownictwo</option>
 						</select>
 					</div>
-					<button type="submit" class="btn">Join Chat</button>
+					<button type="submit" class="btn" style="width:120px; margin-left: 140px;background-color: aliceblue; border-color:#3e78be;">Join</button>
 				</form>
 			</main>
 		</div>

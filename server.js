@@ -21,7 +21,7 @@ const io = socketio(server);
 // Set static folder
 app.use(express.static(path.join(__dirname, "public")));
 
-const botName = "ChatCord Bot";
+const botName = "bot";
 
 (async () => {
   pubClient = createClient({ url: "redis://127.0.0.1:6379" });
@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
     socket.join(user.room);
 
     // Welcome current user
-    socket.emit("message", formatMessage(botName, "Welcome to ChatCord!"));
+    socket.emit("message", formatMessage(botName, "Say hello to others!"));
 
     // Broadcast when a user connects
     socket.broadcast
@@ -59,7 +59,6 @@ io.on("connection", (socket) => {
   // Listen for chatMessage
   socket.on("chatMessage", (msg) => {
     const user = getCurrentUser(socket.id);
-
     io.to(user.room).emit("message", formatMessage(user.username, msg));
   });
 
@@ -85,3 +84,14 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+io.on('connection', (socket)=>{
+  socket.on('typing', (data)=>{
+    const user = getCurrentUser(socket.id);
+    if(data.typing==true)
+       io.emit("notification", formatMessage(user.username, "is typing..."))
+    else
+       io.emit("notification", formatMessage(user.username, "is typing..."))
+  })
+}); 

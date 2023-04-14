@@ -3,26 +3,29 @@ const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const userList = document.getElementById('users');
 
-// Get username and room from URL
+// get URL params - username and room
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
 
 const socket = io();
 
-// Join chatroom
+// user join room
 socket.emit('joinRoom', { username, room });
 
-// Get room and users
+// get room and users
 socket.on('roomUsers', ({ room, users }) => {
   outputRoomName(room);
   outputUsers(users);
 });
 
-// Message from server
+// message from server
 socket.on('message', (message) => {
   console.log(message);
   outputMessage(message);
+  if(message.text == "is typing...") {
+    document.getElementById('not2').textContent = `${message.username} is typing...`
+  }
 
   // Scroll down
   chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -34,9 +37,7 @@ chatForm.addEventListener('submit', (e) => {
 
   // Get message text
   let msg = e.target.elements.msg.value;
-
   msg = msg.trim();
-
   if (!msg) {
     return false;
   }
@@ -45,6 +46,7 @@ chatForm.addEventListener('submit', (e) => {
   socket.emit('chatMessage', msg);
 
   // Clear input
+  document.getElementById('not2').textContent = ``
   e.target.elements.msg.value = '';
   e.target.elements.msg.focus();
 });
@@ -52,6 +54,12 @@ chatForm.addEventListener('submit', (e) => {
 // Output message to DOM
 function outputMessage(message) {
   const div = document.createElement('div');
+  if(message.username == username) {
+    div.style.background = "#9cb7dd"
+    div.style.marginLeft = "200px"
+  }else {
+    div.style.marginRight = "200px"
+  }
   div.classList.add('message');
   const p = document.createElement('p');
   p.classList.add('meta');
@@ -80,11 +88,53 @@ function outputUsers(users) {
   });
 }
 
-//Prompt the user before leave chat room
+//user leaves chat room
 document.getElementById('leave-btn').addEventListener('click', () => {
-  const leaveRoom = confirm('Are you sure you want to leave the chatroom?');
-  if (leaveRoom) {
-    window.location = '../index.html';
-  } else {
-  }
+  window.location = '../index.html';
 });
+
+var typing=false;
+var timeout=undefined;
+
+function typingTimeout(){
+  typing=false
+  //socket.emit('typing', {user:user, typing:false})
+}
+
+
+document.getElementById('msg').addEventListener('click', () => {
+   // if(e.which!=13){
+      typing=true
+      socket.emit('typing', {user:username, typing:true})
+      clearTimeout(timeout)
+      timeout=setTimeout(typingTimeout, 3000)
+  //  }else{
+    //  clearTimeout(timeout)
+    //  typingTimeout()
+      //sendMessage() function will be called once the user hits enter
+    //  sendMessage()
+ //   }
+  });
+  
+
+  //code explained later
+  socket.on('display', (data)=>{
+    if(data.typing==true){
+      console.log(` is typing...`)
+      document.getElementById('not2').text(`is typing...`)
+      console.log(document.getElementById('not2').value)
+      outputMessage(data)
+    }
+     // $('.typing').text(`${data.username} is typing...`)
+   // else
+    //  $('.typing').text("")
+  });
+
+
+  socket.on('notification', (message) => {
+    console.log(message);
+    //outputMessage(message);
+    if(message.text == "is typing...") {
+      document.getElementById('not2').textContent = `${message.username} is typing...`
+    }
+  });
