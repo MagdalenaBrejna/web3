@@ -60,12 +60,30 @@ function outputMessage(message) {
   }else {
     div.style.marginRight = "200px"
   }
+
   div.classList.add('message');
   const p = document.createElement('p');
   p.classList.add('meta');
   p.innerText = message.username;
   p.innerHTML += `<span>${message.time}</span>`;
   div.appendChild(p);
+
+  let file = document.getElementById('my_file').files[0]
+  console.log(file)
+  if(file != null) {
+    message.file = file
+    let url = file
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.width = "200px"
+    img.height = "200px"//URL.createObjectURL(new Blob([file]))
+    console.log(url)
+    const f = document.createElement('p')
+    f.classList.add('meta')
+    f.innerHTML += `<img src="${img.src}" style="width:200px;height:200px"/>`
+    div.append(f)
+  }
+  
   const para = document.createElement('p');
   para.classList.add('text');
   para.innerText = message.text;
@@ -138,3 +156,5 @@ document.getElementById('msg').addEventListener('click', () => {
       document.getElementById('not2').textContent = `${message.username} is typing...`
     }
   });
+
+  

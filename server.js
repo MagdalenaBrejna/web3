@@ -86,12 +86,14 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
+
 io.on('connection', (socket)=>{
   socket.on('typing', (data)=>{
     const user = getCurrentUser(socket.id);
     if(data.typing==true)
        io.emit("notification", formatMessage(user.username, "is typing..."))
     else
-       io.emit("notification", formatMessage(user.username, "is typing..."))
+       io.emit("notification", formatMessage(user.username, ""))
   })
 }); 
+
