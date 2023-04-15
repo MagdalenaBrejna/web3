@@ -25,7 +25,8 @@ socket.on('message', (message) => {
   outputMessage(message);
   if(message.text == "is typing...") {
     document.getElementById('not2').textContent = `${message.username} is typing...`
-  }
+  } else
+    document.getElementById('not2').textContent = ``
 
   // Scroll down
   chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -76,12 +77,13 @@ function outputMessage(message) {
     const img = new Image();
     img.src = URL.createObjectURL(file);
     img.width = "200px"
-    img.height = "200px"//URL.createObjectURL(new Blob([file]))
+    img.height = "200px"
     console.log(url)
     const f = document.createElement('p')
     f.classList.add('meta')
     f.innerHTML += `<img src="${img.src}" style="width:200px;height:200px"/>`
     div.append(f)
+    document.getElementById('my_file').value = ''
   }
   
   const para = document.createElement('p');
