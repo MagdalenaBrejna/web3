@@ -2,7 +2,7 @@ const path = require("path");
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
-const formatMessage = require("./utils/messages");
+
 const createAdapter = require("@socket.io/redis-adapter").createAdapter;
 const redis = require("redis");
 require("dotenv").config();
@@ -13,6 +13,12 @@ const {
   userLeave,
   getRoomUsers,
 } = require("./utils/users");
+
+const {
+  formatMessage,
+  addMessage,
+  getRoomMessages,
+} = require("./utils/messages");
 
 const app = express();
 const server = http.createServer(app);
@@ -38,6 +44,10 @@ io.on("connection", (socket) => {
 
     socket.join(user.room);
 
+    const m = getRoomMessages(user.room)
+    for (let i = 0; i < m.length; i++) {
+      socket.emit("message", formatMessage(m[i].username, m[i].text));
+    }
     // Welcome current user
     socket.emit("message", formatMessage(botName, "Say hello to others!"));
 
@@ -59,6 +69,7 @@ io.on("connection", (socket) => {
   // Listen for chatMessage
   socket.on("chatMessage", (msg) => {
     const user = getCurrentUser(socket.id);
+    addMessage(user.username, msg, '', user.room)
     io.to(user.room).emit("message", formatMessage(user.username, msg));
   });
 

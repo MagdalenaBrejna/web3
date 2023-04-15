@@ -32,6 +32,16 @@ socket.on('message', (message) => {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
+
+
+socket.on('message2', (user, m) => {
+  outputMessage2(user, m);
+  console.log(m)
+  // Scroll down
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+
 // Message submit
 chatForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -89,6 +99,30 @@ function outputMessage(message) {
   const para = document.createElement('p');
   para.classList.add('text');
   para.innerText = message.text;
+  div.appendChild(para);
+  document.querySelector('.chat-messages').appendChild(div);
+}
+
+
+function outputMessage2(user, m) {
+  const div = document.createElement('div');
+  if(user == username) {
+    div.style.background = "#9cb7dd"
+    div.style.marginLeft = "200px"
+  }else {
+    div.style.marginRight = "200px"
+  }
+
+  div.classList.add('m');
+  const p = document.createElement('p');
+  p.classList.add('meta');
+  p.innerText = user;
+  p.innerHTML += `<span>${m.time}</span>`;
+  div.appendChild(p);
+  
+  const para = document.createElement('p');
+  para.classList.add('text');
+  para.innerText = m.text;
   div.appendChild(para);
   document.querySelector('.chat-messages').appendChild(div);
 }
